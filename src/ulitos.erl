@@ -6,7 +6,7 @@
 -author("palkan").
 
 %% API
--export([timestamp/0,get_var/3,print_stacktrace/0, load_config/2, random_string/1]).
+-export([timestamp/0,get_var/3,print_stacktrace/0, load_config/2, random_string/1, binary_to_hex/1]).
 
 %% @doc Return current UTC time in ms (uses <code>os:timestamp/0</code>).
 %% @end
@@ -76,4 +76,25 @@ random_string(0) -> [];
 
 random_string(Length) -> [random_char() | random_string(Length-1)].
 
-random_char() -> random:uniform(97) + 25 .
+random_char() -> random:uniform(25) + 97.
+
+
+%% @private
+
+hex(V) ->
+  if
+    V < 10 ->
+      $0 + V;
+    true ->
+      $a + (V - 10)
+  end.
+
+%% @private
+
+binary_to_hex(Bin) ->
+  lists:foldl(fun(E, Acc) ->
+    [hex(E bsr 4) | [hex(E band 16#F) | Acc]] end,
+    [],
+    lists:reverse(binary_to_list(Bin))).
+
+
