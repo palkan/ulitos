@@ -6,7 +6,7 @@
 -author("palkan").
 
 %% API
--export([timestamp/0,get_var/3,print_stacktrace/0, load_config/2, random_string/1, binary_to_hex/1]).
+-export([timestamp/0,get_var/3,get_var/2,print_stacktrace/0, load_config/2, random_string/1, binary_to_hex/1]).
 
 %% @doc Return current UTC time in ms (uses <code>os:timestamp/0</code>).
 %% @end
@@ -25,6 +25,14 @@ get_var(App, Var, Def) ->
   case application:get_env(App, Var) of
     {ok, Val} -> Val;
     _ -> Def
+  end.
+
+
+-spec get_var(atom(),atom()) -> any()|undefined.
+get_var(App, Var) ->
+  case application:get_env(App, Var) of
+    {ok, Val} -> Val;
+    _ -> undefined
   end.
 
 %% @doc
@@ -53,7 +61,6 @@ print_stacktrace() ->
 load_config(App,File) ->
   Path = code:priv_dir(App)++"/"++File,
   Env = load_file_config(Path),
-  io:format("env from file:~p",[Env]),
   [application:set_env(App, Key, Value) || {Key, Value} <- Env],
   ok.
 
