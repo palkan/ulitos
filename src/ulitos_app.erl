@@ -4,7 +4,7 @@
 -author("palkan").
 
 %% API
--export([ensure_started/1,stop_apps/1,reload/1,reload_modules/1]).
+-export([ensure_started/1,ensure_loaded/1,stop_apps/1,reload/1,reload_modules/1]).
 
 
 %% @doc
@@ -23,6 +23,22 @@ ensure_started([App | Apps]) ->
     ok -> ensure_started(Apps);
     {error, {already_started, App}} -> ensure_started(Apps)
   end.
+
+
+%% @doc
+%% Tries to load modules.
+%% @end
+
+-spec ensure_loaded(list(atom()) | atom()) -> ok
+|error.
+
+ensure_loaded([]) -> ok;
+
+ensure_loaded(Mod) when is_atom(Mod) -> ensure_started([Mod]);
+
+ensure_loaded([Mod | Mods]) ->
+  {module,_} = code:ensure_loaded(Mod),
+  ensure_loaded(Mods).
 
 %% @doc
 %% Stop applications.
