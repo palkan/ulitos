@@ -6,7 +6,7 @@
 -author("palkan").
 
 %% API
--export([timestamp/0,get_var/3,get_var/2,print_stacktrace/0, load_config/2, random_string/1, binary_to_hex/1]).
+-export([timestamp/0,get_var/3,get_var/2,print_stacktrace/0, load_config/2, random_string/1, binary_to_hex/1, join/2]).
 
 %% @doc Return current UTC time in ms (uses <code>os:timestamp/0</code>).
 %% @end
@@ -15,6 +15,7 @@
 timestamp() ->
   {Mega, Sec, Micro} = os:timestamp(),
   ((Mega * 1000000 + Sec) * 1000000 + Micro) div 1000.
+
 
 %% @doc
 %% Return application environment variable called <code>Var</code> if exists; otherwise return <code>Def</code>.
@@ -71,6 +72,22 @@ load_file_config(Path) ->
      _ -> []
   end.
 
+
+%% @doc
+%% Join strings with delimiter
+%% @end
+
+-spec join(list(string()),string()) -> string().
+
+join(Strings,Del) ->
+  join_(Strings,Del,"").
+
+
+join_([],_,S) -> S;
+
+join_([H|T],Del,"") -> join_(T,Del,H);
+
+join_([H|T],Del,S) -> join_(T,Del,S++","++H).
 
 
 %% @doc
