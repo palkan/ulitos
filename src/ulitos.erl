@@ -6,7 +6,7 @@
 -author("palkan").
 
 %% API
--export([timestamp/0,get_var/3,get_var/2,print_stacktrace/0, load_config/2, random_string/1, binary_to_hex/1]).
+-export([timestamp/0,get_var/3,get_var/2,print_stacktrace/0, load_config/2, random_string/1, binary_to_hex/1, flush_box/0]).
 
 %% @doc Return current UTC time in ms (uses <code>os:timestamp/0</code>).
 %% @end
@@ -71,6 +71,19 @@ load_file_config(Path) ->
      _ -> []
   end.
 
+
+%% @doc Empty caller process message box
+%% @end
+
+-spec flush_box() -> ok.
+
+flush_box() ->
+  receive
+    _M ->
+      flush_box()
+  after
+    0 -> ok
+  end.
 
 
 %% @doc
