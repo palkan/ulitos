@@ -21,7 +21,8 @@ ensure_started(App) when is_atom(App) -> ensure_started([App]);
 ensure_started([App | Apps]) ->
   case application:start(App) of
     ok -> ensure_started(Apps);
-    {error, {already_started, App}} -> ensure_started(Apps)
+    {error, {already_started, App}} -> ensure_started(Apps);
+    {error, {not_started, Dep}} -> ensure_started(Dep), ensure_started([App | Apps])
   end.
 
 
