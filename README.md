@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/palkan/ulitos.svg?branch=master)](https://travis-ci.org/palkan/ulitos)
 Erlang common utils modules
 =======
 

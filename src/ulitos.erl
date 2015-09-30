@@ -23,13 +23,13 @@ timestamp() ->
 
 print_stacktrace() ->
   {M,F} = case code:is_loaded(lager) of
-            {ok,_} -> {lager,debug};
-            _ -> {io,format}
+            {ok,_} -> {lager, debug};
+            _ -> {io, format}
               end,
   try
     smth:bark()
   catch
-    _:_ -> M:F("Print stack:~n ~p~n",[erlang:get_stacktrace()])
+    _:_ -> M:F("Print stack:~n ~p~n", [erlang:get_stacktrace()])
   end.
 
 
@@ -56,7 +56,7 @@ flush_box() ->
 
 random_string(0) -> [];
 
-random_string(Length) -> [random_char() | random_string(Length-1)].
+random_string(Length) -> [random_char() | random_string(Length - 1)].
 
 random_char() -> random:uniform(25) + 97.
 

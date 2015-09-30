@@ -50,7 +50,7 @@ ensure_loaded([]) -> ok;
 ensure_loaded(Mod) when is_atom(Mod) -> ensure_started([Mod]);
 
 ensure_loaded([Mod | Mods]) ->
-  {module,_} = code:ensure_loaded(Mod),
+  {module, _} = code:ensure_loaded(Mod),
   ensure_loaded(Mods).
 
 %% @doc
@@ -73,10 +73,10 @@ stop_apps([App | Apps]) ->
 
 reload(App) ->
   application:load(App),
-  case application:get_key(App,modules) of
+  case application:get_key(App, modules) of
     undefined ->
       ok;
-    {ok,Modules} ->
+    {ok, Modules} ->
       reload_modules(lists:usort(Modules))
   end.
 
@@ -98,7 +98,7 @@ reload_modules([]) -> ok;
 reload_modules([?MODULE | T]) -> reload_modules(T);
 reload_modules(M) when is_atom(M) -> reload_modules([M]);
 reload_modules([H|T]) ->
-  lager:debug("reload module: ~p",[H]),
+  lager:debug("reload module: ~p", [H]),
   reload_mod(H),
   reload_modules(T).
 
@@ -107,7 +107,7 @@ reload_modules([H|T]) ->
 %% Return application environment variable called <code>Var</code> if exists; otherwise return <code>Def</code>.
 %% @end
 
--spec get_var(atom(),atom(),any()) -> any().
+-spec get_var(atom(), atom(), any()) -> any().
 get_var(App, Var, Def) ->
   case application:get_env(App, Var) of
     {ok, Val} -> Val;
@@ -115,16 +115,16 @@ get_var(App, Var, Def) ->
   end.
 
 
--spec get_var(atom(),atom()) -> any()|undefined.
+-spec get_var(atom(), atom()) -> any()|undefined.
 get_var(App, Var) ->
-  get_var(App,Var,undefined).
+  get_var(App, Var, undefined).
 
 
 %% @doc
 %% Set application environment variable.
 %% @end
 
--spec set_var(atom(),atom(),any()) -> ok.
+-spec set_var(atom(), atom(), any()) -> ok.
 set_var(App, Var, Val) ->
   application:set_env(App, Var, Val).
 
@@ -136,32 +136,32 @@ set_var(App, Var, Val) ->
 
 load_config(App) ->
   File = atom_to_list(App)++".config",
-  load_config(App,File).
+  load_config(App, File).
 
 %% @doc
 %% Set application <code>App</code> environment vars from file with name <code>File</code> located in app priv_dir.
 %% @end
 
--spec load_config(atom(),string()) -> ok.
+-spec load_config(atom(), string()) -> ok.
 
-load_config(App,File) ->
-  load_config(App,File,[]).
+load_config(App, File) ->
+  load_config(App, File, []).
 
 %% @doc
 %% Set application <code>App</code> environment vars from file with name <code>File</code> located in some of Dirs or in priv_dir.
 %% @end
 
--spec load_config(atom(),string(),list()) -> ok.
+-spec load_config(atom(), string(), list()) -> ok.
 
-load_config(App,File,Dirs) ->
+load_config(App, File, Dirs) ->
   Path = code:priv_dir(App),
-  Env = load_file_config(Dirs++[Path],File),
+  Env = load_file_config(Dirs ++ [Path], File),
   [application:set_env(App, Key, Value) || {Key, Value} <- Env],
   ok.
 
 
-load_file_config(Paths,File) ->
-  case file:path_consult(Paths,File) of
+load_file_config(Paths, File) ->
+  case file:path_consult(Paths, File) of
     {ok, Env, _Path} -> Env;
      _ -> []
   end.
@@ -172,7 +172,7 @@ load_file_config(Paths,File) ->
 -ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
 
--define(PATH(File), filename:join([code:priv_dir(ulitos),"..",File])).
+-define(PATH(File), filename:join([code:priv_dir(ulitos), "..", File])).
 
 load_config_test_() ->
   {"List dir tests",
@@ -195,39 +195,39 @@ unconsult(File,L) ->
 
 config_setup() ->
   file:make_dir(code:priv_dir(ulitos)),
-  unconsult(?PATH("priv/ulitos.config"), [{test,1}]),
+  unconsult(?PATH("priv/ulitos.config"), [{test, 1}]),
   file:make_dir(?PATH("priv/a")),
-  unconsult(?PATH("priv/a/ulitos.config"), [{test,2}]),
-  unconsult(?PATH("priv/ul.config"), [{test,3}]),
-  unconsult(?PATH("priv/a/ul.config"), [{test,4}]),
+  unconsult(?PATH("priv/a/ulitos.config"), [{test, 2}]),
+  unconsult(?PATH("priv/ul.config"), [{test, 3}]),
+  unconsult(?PATH("priv/a/ul.config"), [{test, 4}]),
   ok.
 
 config_cleanup(_) ->
   ulitos_file:recursively_del_dir(?PATH("priv")),
-  application:unset_env(ulitos,test),
+  application:unset_env(ulitos, test),
   ok.
   
 load_config_by_app_t_(_)->
   load_config(ulitos),
   [
-    ?_assertEqual(1, get_var(ulitos,test))
+    ?_assertEqual(1, get_var(ulitos, test))
   ].
 
 load_config_by_name_t_(_)->
-  load_config(ulitos,"ul.config"),
+  load_config(ulitos, "ul.config"),
   [
-    ?_assertEqual(3, get_var(ulitos,test))
+    ?_assertEqual(3, get_var(ulitos, test))
   ].
 
 load_config_by_name_and_paths_t_(_)->
-  load_config(ulitos,"ul.config",[?PATH("priv/b"),?PATH("priv/a")]),
+  load_config(ulitos, "ul.config", [?PATH("priv/b"), ?PATH("priv/a")]),
   [
-    ?_assertEqual(4, get_var(ulitos,test))
+    ?_assertEqual(4, get_var(ulitos, test))
   ].
 
 load_config_by_name_and_paths_2_t_(_)->
-  load_config(ulitos,"ul.config",[?PATH("priv/b"),?PATH("c")]),
+  load_config(ulitos, "ul.config", [?PATH("priv/b"), ?PATH("c")]),
   [
-    ?_assertEqual(3, get_var(ulitos,test))
+    ?_assertEqual(3, get_var(ulitos, test))
   ].
 -endif.
