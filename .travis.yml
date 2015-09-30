@@ -1,0 +1,6 @@
+sudo: false
+language: erlang
+otp_release:
+  - 17.4
+  - 18.0
+script: "rebar compile && rebar eunit skip_deps=true && rebar ct skip_deps=true"

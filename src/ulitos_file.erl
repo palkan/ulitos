@@ -1,11 +1,13 @@
 -module(ulitos_file).
 -author("palkan").
 
--export([recursively_list_dir/1,
+-export([
+  recursively_list_dir/1,
   recursively_list_dir/2,
   recursively_del_dir/1,
   dir_traversal/2,
-  dir_traversal/3]).
+  dir_traversal/3
+]).
 
 
 % @type name() = string() | atom() | binary().
@@ -51,7 +53,7 @@ recursively_list_dir(Dir, FilesOnly) ->
   case filelib:is_file(Dir) of
     true ->
       case filelib:is_dir(Dir) of
-        true -> {ok, dir_traversal([Dir], fun(Path,Acc) -> [Path|Acc] end, FilesOnly)};
+        true -> {ok, dir_traversal([Dir], fun(Path, Acc) -> [Path|Acc] end, FilesOnly)};
         false -> {error, enotdir}
       end;
     false -> {error, enoent}
@@ -69,7 +71,7 @@ recursively_list_dir(Dir, FilesOnly) ->
 
 recursively_del_dir(Dir) ->
   case recursively_list_dir(Dir) of
-    {ok,List} -> del_paths(List);
+    {ok, List} -> del_paths(List);
     Error -> Error
   end.
 
@@ -80,10 +82,10 @@ recursively_del_dir(Dir) ->
 % @doc Traverse through directory from top to bottom and execute Fun on each path.
 %% Fun must have signature fun(Path::string(), Acc:list()) -> list().
 
--spec dir_traversal(Dir::name(),Fun::function()) ->
-{ok,Result::list()} | {error, atom()}.
+-spec dir_traversal(Dir::name(), Fun::function()) ->
+{ok, Result::list()} | {error, atom()}.
 
-dir_traversal(Dir,Fun) -> dir_traversal(Dir,Fun,false).
+dir_traversal(Dir,Fun) -> dir_traversal(Dir, Fun, false).
 
 % @spec (Dir::name(),Fun::function(),FilesOnly::boolean()) -> {ok, Result::list()} | {error, atom()}
 % @equiv dir_traversal(Dir,Fun,false)
@@ -92,11 +94,11 @@ dir_traversal(Dir,Fun) -> dir_traversal(Dir,Fun,false).
 % If FilesOnly is true, then affects only files.
 % Fun must have signature fun(Path::string(), Acc:list()) -> list().
 
--spec dir_traversal(Dir::name(),Fun::function(),FilesOnly::boolean()) ->
-  {ok,Result::list()} | {error, atom()}.
+-spec dir_traversal(Dir::name(), Fun::function(), FilesOnly::boolean()) ->
+  {ok, Result::list()} | {error, atom()}.
 
-dir_traversal(Dir,Fun,FilesOnly) ->
-  dir_traversal(Dir,Fun,FilesOnly,[]).
+dir_traversal(Dir, Fun, FilesOnly) ->
+  dir_traversal(Dir, Fun, FilesOnly,[]).
 
 %% Internal
 
@@ -104,14 +106,14 @@ dir_traversal([], _Fun, _FilesOnly, Acc) -> Acc;
 dir_traversal([Path|Paths], Fun, FilesOnly, Acc) ->
   dir_traversal(Paths, Fun, FilesOnly,
     case filelib:is_dir(Path) of
-      false -> Fun(Path,Acc);
+      false -> Fun(Path, Acc);
       true ->
         {ok, Listing} = file:list_dir(Path),
         SubPaths = [filename:join(Path, Name) || Name <- Listing],
         dir_traversal(SubPaths, Fun, FilesOnly,
           case FilesOnly of
             true -> Acc;
-            false -> Fun(Path,Acc)
+            false -> Fun(Path, Acc)
           end)
     end).
 
@@ -177,12 +179,12 @@ del_test_() ->
 list_simple_t(_) ->
   filelib:ensure_dir("a/b/c/"),
   file:write_file("a/b/f.test", <<"temp test file">>),
-  [?_assertEqual({ok, ["a/b/f.test","a/b/c","a/b","a"]},
+  [?_assertEqual({ok, ["a/b/f.test", "a/b/c", "a/b", "a"]},
     recursively_list_dir("a"))].
 
 list_nofiles_t(_) ->
   filelib:ensure_dir("a/b/c/"),
-  [?_assertEqual({ok, ["a/b/c", "a/b", "a"]},recursively_list_dir("a"))].
+  [?_assertEqual({ok, ["a/b/c", "a/b", "a"]}, recursively_list_dir("a"))].
 
 list_filesonly_t(_) ->
   filelib:ensure_dir("a/b/f.test"),
@@ -203,13 +205,13 @@ list_cleanup(_) ->
 
 del_no_dir_t(_) ->
   [
-    ?_assertEqual({error,enoent},recursively_del_dir("UnUSuAalfIlEnaMe")),
-    ?_assertEqual({error,enotdir},recursively_del_dir("a/b/f.test"))
+    ?_assertEqual({error, enoent}, recursively_del_dir("UnUSuAalfIlEnaMe")),
+    ?_assertEqual({error, enotdir}, recursively_del_dir("a/b/f.test"))
   ].
 
 del_simple_t(_) ->
    [
-    ?_assertEqual(ok,recursively_del_dir("a")),
+    ?_assertEqual(ok, recursively_del_dir("a")),
     ?_assertNot(filelib:is_file("a/b"))
    ].
 
