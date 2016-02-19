@@ -4,6 +4,9 @@
     {vsn, "0.3.0"},
     {registered, []},
     {applications, [kernel, stdlib]},
-    {env, []}
+    {env, []},
+    {maintainers, ["Vlad Dem"]},
+    {licenses, []},
+    {links, [{"Github", "https://github.com/palkan/ulitos"}]}
   ]
 }.
