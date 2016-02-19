@@ -9,12 +9,8 @@
   dir_traversal/3
 ]).
 
-
 % @type name() = string() | atom() | binary().
 -type name() :: string() | atom() | binary().
-
-
-
 
 %% API
 
@@ -26,18 +22,11 @@
 % it returns {error, Reason}. Paths is a list of Paths of all the
 % files and directories in the input directory's subtree. The paths are not
 % sorted in any order.
-
--spec recursively_list_dir(Dir::name()) ->
-  {ok, [string()]} | {error, atom()}.
-
+-spec recursively_list_dir(Dir::name()) -> {ok, [string()]} | {error, atom()}.
 recursively_list_dir(Dir) ->
-  recursively_list_dir(Dir, false). % default value of FilesOnly is false
+  recursively_list_dir(Dir, false).
 
-
-
-
-% @spec (Dir::name(), FilesOnly::boolean()) -> {ok, [string()]} |
-%                                                   {error, atom()}
+% @spec (Dir::name(), FilesOnly::boolean()) -> {ok, [string()]} | {error, atom()}
 %
 % @doc Lists all the files in a directory and recursively in all its
 % sub directories. Returns {ok, Paths} if successful. Otherwise,
@@ -45,10 +34,8 @@ recursively_list_dir(Dir) ->
 % of all the files <b>and directories</b> in the input directory's subtree.
 % If FilesOnly is true, Paths is a list of paths of only the files in the
 % input directory's subtree. The paths are not sorted in any order.
-
 -spec recursively_list_dir(Dir::name(), FilesOnly::boolean()) ->
   {ok, [string()]} | {error, atom()}.
-
 recursively_list_dir(Dir, FilesOnly) ->
   case filelib:is_file(Dir) of
     true ->
@@ -64,11 +51,7 @@ recursively_list_dir(Dir, FilesOnly) ->
 %
 % @doc Delete all files and directories within Dir (and Dir itself).
 % Return {error, Reason} if Dir doesn't exist or is not directory.
-
--spec recursively_del_dir(Dir::name()) ->
-  ok | {error, atom()}.
-
-
+-spec recursively_del_dir(Dir::name()) -> ok | {error, atom()}.
 recursively_del_dir(Dir) ->
   case recursively_list_dir(Dir) of
     {ok, List} -> del_paths(List);
@@ -81,10 +64,7 @@ recursively_del_dir(Dir) ->
 %
 % @doc Traverse through directory from top to bottom and execute Fun on each path.
 %% Fun must have signature fun(Path::string(), Acc:list()) -> list().
-
--spec dir_traversal(Dir::name(), Fun::function()) ->
-{ok, Result::list()} | {error, atom()}.
-
+-spec dir_traversal(Dir::name(), Fun::function()) -> {ok, Result::list()} | {error, atom()}.
 dir_traversal(Dir,Fun) -> dir_traversal(Dir, Fun, false).
 
 % @spec (Dir::name(),Fun::function(),FilesOnly::boolean()) -> {ok, Result::list()} | {error, atom()}
@@ -93,10 +73,7 @@ dir_traversal(Dir,Fun) -> dir_traversal(Dir, Fun, false).
 % @doc Traverse through directory from top to bottom and execute Fun on each path.
 % If FilesOnly is true, then affects only files.
 % Fun must have signature fun(Path::string(), Acc:list()) -> list().
-
--spec dir_traversal(Dir::name(), Fun::function(), FilesOnly::boolean()) ->
-  {ok, Result::list()} | {error, atom()}.
-
+-spec dir_traversal(Dir::name(), Fun::function(), FilesOnly::boolean()) -> {ok, Result::list()} | {error, atom()}.
 dir_traversal(Dir, Fun, FilesOnly) ->
   dir_traversal(Dir, Fun, FilesOnly,[]).
 

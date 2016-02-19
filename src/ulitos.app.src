@@ -1,8 +1,9 @@
 {application, ulitos,
   [
-    {description, "Ulitos: erlang utils modules"},
-    {vsn, git},
+    {description, "Erlang common utils"},
+    {vsn, "0.3.0"},
     {registered, []},
-    {applications, [kernel,stdlib]},
+    {applications, [kernel, stdlib]},
     {env, []}
-  ]}.
+  ]
+}.

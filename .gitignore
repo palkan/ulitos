@@ -1,5 +1,5 @@
 erl_crash.dump
-ebin/
+/_build
 .DS_Store
 tmp/
 .eunit/
