@@ -1,12 +1,12 @@
 {application, ulitos,
   [
     {description, "Erlang common utils"},
-    {vsn, "0.3.0"},
+    {vsn, "0.4.0"},
     {registered, []},
     {applications, [kernel, stdlib]},
     {env, []},
     {maintainers, ["Vlad Dem"]},
-    {licenses, []},
+    {licenses, ["MIT"]},
     {links, [{"Github", "https://github.com/palkan/ulitos"}]}
   ]
 }.
