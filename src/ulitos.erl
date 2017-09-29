@@ -34,7 +34,11 @@ random_string(0) -> [];
 random_string(Length) -> [random_char() | random_string(Length - 1)].
 
 %% @private
+-ifdef(ERLANG_OTP_VERSION_18).
 random_char() -> random:uniform(25) + 97.
+-else.
+random_char() -> rand:uniform(25) + 97.
+-endif.
 
 -spec to_hex(Str::string()) -> Hex::string().
 to_hex(Bin) when is_binary(Bin) ->
