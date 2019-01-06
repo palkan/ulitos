@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/palkan/ulitos.svg?branch=master)](https://travis-ci.org/palkan/ulitos)
+[![Hex Version](https://img.shields.io/hexpm/v/ulitos.svg)](https://hex.pm/packages/ulitos)
+
 # Erlang common utils
 
 Library contains several modules.
