@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/palkan/ulitos.svg?branch=master)](https://travis-ci.org/palkan/ulitos)
+![Build](https://github.com/palkan/ulitos/workflows/Test/badge.svg)
 [![Hex Version](https://img.shields.io/hexpm/v/ulitos.svg)](https://hex.pm/packages/ulitos)
 
 # Erlang common utils
@@ -9,7 +9,7 @@ Library contains several modules.
 
 | Function                    | Description   |
 |-----------------------------|---------------|
-| `timestamp/0`               | Return current system time in milliseconds (**Note**: use `os:system_time(:secs)` in >= 18.0)| 
+| `timestamp/0`               | Return current system time in milliseconds (**Note**: use `os:system_time(:secs)` in >= 18.0)|
 | `flush_box/0`               | Flush current process's mailbox |
 | `random_string/1`           | Return _simply_ (not-safe, uniform) random string as list |
 | `to_hex/1`                  | Convert string to hexadecimal representation |
